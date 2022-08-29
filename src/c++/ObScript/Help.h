@@ -31,6 +31,18 @@ namespace ObScript
 		class detail
 		{
 		public:
+			static const char* GetFormEditorID(const RE::TESForm* a_form)
+			{
+				auto hndl = GetModuleHandleA("po3_Tweaks");
+				auto func = reinterpret_cast<const char* (*)(std::uint32_t)>(GetProcAddress(hndl, "GetFormEditorID"));
+				if (func)
+				{
+					return func(a_form->formID);
+				}
+
+				return a_form->GetFormEditorID();
+			}
+
 			static void SortFormArray(std::vector<RE::TESForm*>& a_forms)
 			{
 				std::sort(
@@ -46,8 +58,8 @@ namespace ObScript
 							return L_FORM < R_FORM;
 						}
 
-						auto L_EDID = a_lhs->GetFormEditorID();
-						auto R_EDID = a_rhs->GetFormEditorID();
+						auto L_EDID = detail::GetFormEditorID(a_lhs);
+						auto R_EDID = detail::GetFormEditorID(a_rhs);
 						auto C_EDID = _stricmp(L_EDID, R_EDID);
 						if (C_EDID != 0)
 						{
@@ -274,7 +286,7 @@ namespace ObScript
 			for (auto& iter : m_Forms)
 			{
 				auto form = RE::FormTypeToString(iter->GetFormType());
-				auto edid = iter->GetFormEditorID();
+				auto edid = detail::GetFormEditorID(iter);
 				auto name = iter->GetName();
 
 				auto match = fmt::format(FMT_STRING("{:s}: {:s} ({:08X}) '{:s}'"sv), form, edid, iter->GetFormID(), name);
@@ -300,7 +312,7 @@ namespace ObScript
 
 				default:
 					{
-						auto edid = a_form->GetFormEditorID();
+						auto edid = detail::GetFormEditorID(a_form);
 						auto name = a_form->GetName();
 
 						if ((edid && detail::strvicmp(edid, m_MatchString)) || (name && detail::strvicmp(name, m_MatchString)))
