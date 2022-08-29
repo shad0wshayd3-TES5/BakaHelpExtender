@@ -10,9 +10,9 @@ namespace ObScript
 			if (const auto function = RE::SCRIPT_FUNCTION::LocateConsoleCommand("Help"sv))
 			{
 				static RE::SCRIPT_PARAMETER params[] = {
-					{ "matchstring", RE::SCRIPT_PARAM_TYPE::kChar, true },
-					{ "filter", RE::SCRIPT_PARAM_TYPE::kInt, true },
-					{ "form type", RE::SCRIPT_PARAM_TYPE::kChar, true }
+					{ "matchstring (optional)", RE::SCRIPT_PARAM_TYPE::kChar, true },
+					{ "filter (optional)", RE::SCRIPT_PARAM_TYPE::kInt, true },
+					{ "form type (optional)", RE::SCRIPT_PARAM_TYPE::kChar, true }
 				};
 
 				function->SetParameters(params);
@@ -283,13 +283,20 @@ namespace ObScript
 		static void ShowHelp_Forms_Print()
 		{
 			detail::SortFormArray(m_Forms);
+
+			auto FormEnumString = RE::FORM_ENUM_STRING::GetFormEnumString();
 			for (auto& iter : m_Forms)
 			{
-				auto form = RE::FormTypeToString(iter->GetFormType());
+				auto form = FormEnumString[iter->formType.underlying()].formString;
 				auto edid = detail::GetFormEditorID(iter);
 				auto name = iter->GetName();
 
-				auto match = fmt::format(FMT_STRING("{:s}: {:s} ({:08X}) '{:s}'"sv), form, edid, iter->GetFormID(), name);
+				auto match = fmt::format(
+					FMT_STRING("{:s}: {:s} ({:08X}) '{:s}'"sv),
+					form,
+					edid,
+					iter->GetFormID(),
+					name);
 				RE::ConsoleLog::GetSingleton()->Print(match.data());
 			}
 		}
@@ -315,7 +322,8 @@ namespace ObScript
 						auto edid = detail::GetFormEditorID(a_form);
 						auto name = a_form->GetName();
 
-						if ((edid && detail::strvicmp(edid, m_MatchString)) || (name && detail::strvicmp(name, m_MatchString)))
+						if ((edid && detail::strvicmp(edid, m_MatchString)) ||
+						    (name && detail::strvicmp(name, m_MatchString)))
 						{
 							m_Forms.emplace_back(a_form);
 						}
@@ -335,7 +343,8 @@ namespace ObScript
 					return;
 				}
 
-				if (formType != RE::FormType::None && formType != RE::FormType::Cell)
+				if (formType != RE::FormType::None &&
+					formType != RE::FormType::Cell)
 				{
 					auto& forms = TESDataHandler->formArrays[stl::to_underlying(formType)];
 					for (auto iter : forms)
@@ -362,7 +371,8 @@ namespace ObScript
 					ShowHelp_Forms_Print();
 				}
 
-				if (formType == RE::FormType::None || formType == RE::FormType::Cell)
+				if (formType == RE::FormType::None ||
+					formType == RE::FormType::Cell)
 				{
 					ShowHelp_Cells();
 				}

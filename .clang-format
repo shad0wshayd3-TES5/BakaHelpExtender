@@ -41,7 +41,7 @@ BraceWrapping:
   SplitEmptyFunction: False
   SplitEmptyRecord: False
   SplitEmptyNamespace: False
-BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBinaryOperators: None
 BreakBeforeBraces: Custom
 BreakBeforeTernaryOperators: True
 BreakConstructorInitializers: AfterColon
