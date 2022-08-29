@@ -344,7 +344,7 @@ namespace ObScript
 				}
 
 				if (formType != RE::FormType::None &&
-					formType != RE::FormType::Cell)
+				    formType != RE::FormType::Cell)
 				{
 					auto& forms = TESDataHandler->formArrays[stl::to_underlying(formType)];
 					for (auto iter : forms)
@@ -372,7 +372,7 @@ namespace ObScript
 				}
 
 				if (formType == RE::FormType::None ||
-					formType == RE::FormType::Cell)
+				    formType == RE::FormType::Cell)
 				{
 					ShowHelp_Cells();
 				}
