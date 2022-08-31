@@ -9,16 +9,27 @@ namespace ObScript
 		{
 			if (const auto function = RE::SCRIPT_FUNCTION::LocateConsoleCommand("Help"sv))
 			{
-				static RE::SCRIPT_PARAMETER params[] = {
-					{ "matchstring (optional)", RE::SCRIPT_PARAM_TYPE::kChar, true },
-					{ "filter (optional)", RE::SCRIPT_PARAM_TYPE::kInt, true },
-					{ "form type (optional)", RE::SCRIPT_PARAM_TYPE::kChar, true }
-				};
+				if (detail::IsInModule(reinterpret_cast<std::uintptr_t>(function->executeFunction)))
+				{
+					static RE::SCRIPT_PARAMETER params[] = {
+						{ "matchstring (optional)", RE::SCRIPT_PARAM_TYPE::kChar, true },
+						{ "filter (optional)", RE::SCRIPT_PARAM_TYPE::kInt, true },
+						{ "form type (optional)", RE::SCRIPT_PARAM_TYPE::kChar, true }
+					};
 
-				function->SetParameters(params);
-				function->executeFunction = &Execute;
+					function->SetParameters(params);
+					function->executeFunction = &Execute;
 
-				logger::debug("Registered Help."sv);
+					logger::debug("Registered Help."sv);
+				}
+				else
+				{
+					logger::error("Failed to register Help, command was already overridden."sv);
+				}
+			}
+			else
+			{
+				logger::error("Failed to find Help function."sv);
 			}
 		}
 
@@ -41,6 +52,14 @@ namespace ObScript
 				}
 
 				return a_form->GetFormEditorID();
+			}
+
+			static bool IsInModule(std::uintptr_t a_ptr)
+			{
+				auto& mod = REL::Module::get();
+				auto seg = mod.segment(REL::Segment::textx);
+				auto end = seg.address() + seg.size();
+				return (seg.address() < a_ptr) && (a_ptr < end);
 			}
 
 			static void SortFormArray(std::vector<RE::TESForm*>& a_forms)
@@ -126,6 +145,7 @@ namespace ObScript
 			{
 				case 0:
 					ShowHelp_Funcs();
+					ShowHelp_Settings();
 					ShowHelp_Globs();
 					ShowHelp_Forms();
 					ShowHelp_Usage();
@@ -137,6 +157,7 @@ namespace ObScript
 					break;
 
 				case 2:
+					ShowHelp_Settings();
 					ShowHelp_Usage();
 					break;
 
@@ -233,6 +254,109 @@ namespace ObScript
 			for (std::uint16_t i = 0; i < RE::SCRIPT_FUNCTION::Commands::kScriptCommandsEnd; ++i)
 			{
 				ShowHelp_Funcs_Match(scriptCommands[i]);
+			}
+		}
+
+		static void ShowHelp_Settings_Print(RE::Setting* a_setting)
+		{
+			std::string match;
+			switch (a_setting->GetType())
+			{
+				case RE::Setting::Type::kBool:
+					match = fmt::format(
+						FMT_STRING("{:s} = {:s}"),
+						a_setting->GetName(),
+						a_setting->GetBool());
+					break;
+
+				case RE::Setting::Type::kFloat:
+					match = fmt::format(
+						FMT_STRING("{:s} = {:0.2f}"sv),
+						a_setting->GetName(),
+						a_setting->GetFloat());
+					break;
+
+				case RE::Setting::Type::kSignedInteger:
+					match = fmt::format(
+						FMT_STRING("{:s} = {:d}"sv),
+						a_setting->GetName(),
+						a_setting->GetSInt());
+					break;
+
+				case RE::Setting::Type::kColor:
+					{
+						auto color = a_setting->GetColor();
+						match = fmt::format(
+							FMT_STRING("{:s} = R:{:d} G:{:d} B:{:d} A:{:d}"sv),
+							a_setting->GetName(),
+							color.red,
+							color.green,
+							color.blue,
+							color.alpha);
+					}
+					break;
+
+				case RE::Setting::Type::kString:
+					match = fmt::format(
+						FMT_STRING("{:s} = {:s}"sv),
+						a_setting->GetName(),
+						a_setting->GetString());
+					break;
+
+				case RE::Setting::Type::kUnsignedInteger:
+					match = fmt::format(
+						FMT_STRING("{:s} = {:d}"sv),
+						a_setting->GetName(),
+						a_setting->GetUInt());
+					break;
+
+				default:
+					match = fmt::format(
+						FMT_STRING("{:s} = <UNKNOWN>"sv),
+						a_setting->GetName());
+					break;
+			}
+
+			RE::ConsoleLog::GetSingleton()->Print(match.data());
+		}
+
+		static void ShowHelp_Settings_Match(RE::Setting* a_setting)
+		{
+			if (detail::strempty(m_MatchString))
+			{
+				ShowHelp_Settings_Print(a_setting);
+				return;
+			}
+
+			auto name = a_setting->name;
+			if (name && detail::strvicmp(name, m_MatchString))
+			{
+				ShowHelp_Settings_Print(a_setting);
+			}
+		}
+
+		static void ShowHelp_Settings()
+		{
+			RE::ConsoleLog::GetSingleton()->Print("----GAME SETTINGS-----------------------");
+			if (auto GameSettingCollection = RE::GameSettingCollection::GetSingleton())
+			{
+				for (auto& iter : GameSettingCollection->settings)
+				{
+					ShowHelp_Settings_Match(iter.second);
+				}
+			}
+
+			RE::ConsoleLog::GetSingleton()->Print("----INI SETTINGS------------------------");
+			if (auto INISettingCollection = RE::INISettingCollection::GetSingleton())
+			{
+				if (auto INIPrefSettingCollection = RE::INIPrefSettingCollection::GetSingleton())
+				{
+					for (auto& iter : INISettingCollection->settings)
+					{
+						auto setting = INIPrefSettingCollection->GetSetting(iter->name);
+						ShowHelp_Settings_Match(setting ? setting : iter);
+					}
+				}
 			}
 		}
 
