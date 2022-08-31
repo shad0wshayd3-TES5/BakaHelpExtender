@@ -1,2 +1,4 @@
 build/
+build-ae/
+build-se/
 CMakeUserPresets.json
