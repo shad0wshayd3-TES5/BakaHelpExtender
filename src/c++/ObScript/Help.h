@@ -48,7 +48,11 @@ namespace ObScript
 				auto func = reinterpret_cast<const char* (*)(std::uint32_t)>(GetProcAddress(hndl, "GetFormEditorID"));
 				if (func)
 				{
-					return func(a_form->formID);
+					std::string result{ func(a_form->formID) };
+					if (!result.empty())
+					{
+						return result.c_str();
+					}
 				}
 
 				return a_form->GetFormEditorID();
