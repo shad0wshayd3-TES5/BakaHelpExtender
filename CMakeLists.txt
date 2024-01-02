@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 set(NAME "HelpExtender")
-set(VERSION 1.2.1)
+set(VERSION 1.3.0)
 set(AE_VERSION 1)
 
 # ---- Options ----
