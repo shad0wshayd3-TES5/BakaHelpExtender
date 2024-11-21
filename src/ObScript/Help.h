@@ -20,16 +20,16 @@ namespace ObScript
 					function->SetParameters(params);
 					function->executeFunction = &Execute;
 
-					logger::debug("Registered Help."sv);
+					SKSE::log::debug("Registered Help."sv);
 				}
 				else
 				{
-					logger::error("Failed to register Help, command was already overridden."sv);
+					SKSE::log::error("Failed to register Help, command was already overridden."sv);
 				}
 			}
 			else
 			{
-				logger::error("Failed to find Help function."sv);
+				SKSE::log::error("Failed to find Help function."sv);
 			}
 		}
 
@@ -77,8 +77,8 @@ namespace ObScript
 
 					default:
 						{
-							auto hndl = GetModuleHandleA("po3_Tweaks");
-							auto func = reinterpret_cast<const char* (*)(std::uint32_t)>(GetProcAddress(hndl, "GetFormEditorID"));
+							auto hndl = REX::W32::GetModuleHandleA("po3_Tweaks");
+							auto func = reinterpret_cast<const char* (*)(std::uint32_t)>(REX::W32::GetProcAddress(hndl, "GetFormEditorID"));
 							if (func)
 							{
 								return func(a_form->formID);
@@ -235,22 +235,22 @@ namespace ObScript
 			{
 				if (nick && !detail::strempty(nick))
 				{
-					match = fmt::format(FMT_STRING("{:s} ({:s}) -> {:s}"sv), name, nick, help);
+					match = std::format("{:s} ({:s}) -> {:s}"sv, name, nick, help);
 				}
 				else
 				{
-					match = fmt::format(FMT_STRING("{:s} -> {:s}"sv), name, help);
+					match = std::format("{:s} -> {:s}"sv, name, help);
 				}
 			}
 			else
 			{
 				if (nick && !detail::strempty(nick))
 				{
-					match = fmt::format(FMT_STRING("{:s} ({:s})"sv), name, nick);
+					match = std::format("{:s} ({:s})"sv, name, nick);
 				}
 				else
 				{
-					match = fmt::format(FMT_STRING("{:s}"sv), name);
+					match = std::format("{:s}"sv, name);
 				}
 			}
 
@@ -298,22 +298,22 @@ namespace ObScript
 			switch (a_setting->GetType())
 			{
 				case RE::Setting::Type::kBool:
-					match = fmt::format(
-						FMT_STRING("{:s} = {:s}"),
+					match = std::format(
+						"{:s} = {:s}",
 						a_setting->GetName(),
 						a_setting->GetBool());
 					break;
 
 				case RE::Setting::Type::kFloat:
-					match = fmt::format(
-						FMT_STRING("{:s} = {:0.2f}"sv),
+					match = std::format(
+						"{:s} = {:0.2f}"sv,
 						a_setting->GetName(),
 						a_setting->GetFloat());
 					break;
 
 				case RE::Setting::Type::kSignedInteger:
-					match = fmt::format(
-						FMT_STRING("{:s} = {:d}"sv),
+					match = std::format(
+						"{:s} = {:d}"sv,
 						a_setting->GetName(),
 						a_setting->GetSInt());
 					break;
@@ -321,8 +321,8 @@ namespace ObScript
 				case RE::Setting::Type::kColor:
 					{
 						auto color = a_setting->GetColor();
-						match = fmt::format(
-							FMT_STRING("{:s} = R:{:d} G:{:d} B:{:d} A:{:d}"sv),
+						match = std::format(
+							"{:s} = R:{:d} G:{:d} B:{:d} A:{:d}"sv,
 							a_setting->GetName(),
 							color.red,
 							color.green,
@@ -332,22 +332,22 @@ namespace ObScript
 					break;
 
 				case RE::Setting::Type::kString:
-					match = fmt::format(
-						FMT_STRING("{:s} = {:s}"sv),
+					match = std::format(
+						"{:s} = {:s}"sv,
 						a_setting->GetName(),
 						a_setting->GetString());
 					break;
 
 				case RE::Setting::Type::kUnsignedInteger:
-					match = fmt::format(
-						FMT_STRING("{:s} = {:d}"sv),
+					match = std::format(
+						"{:s} = {:d}"sv,
 						a_setting->GetName(),
 						a_setting->GetUInt());
 					break;
 
 				default:
-					match = fmt::format(
-						FMT_STRING("{:s} = <UNKNOWN>"sv),
+					match = std::format(
+						"{:s} = <UNKNOWN>"sv,
 						a_setting->GetName());
 					break;
 			}
@@ -408,7 +408,7 @@ namespace ObScript
 				return;
 			}
 
-			auto match = fmt::format(FMT_STRING("{:s} = {:0.2f}"sv), edid, a_global->value);
+			auto match = std::format("{:s} = {:0.2f}"sv, edid, a_global->value);
 			RE::ConsoleLog::GetSingleton()->Print(match.data());
 		}
 
@@ -450,8 +450,8 @@ namespace ObScript
 				auto edid = detail::GetFormEditorID(iter);
 				auto name = iter->GetName();
 
-				auto match = fmt::format(
-					FMT_STRING("{:s}: {:s} ({:08X}) '{:s}'"sv),
+				auto match = std::format(
+					"{:s}: {:s} ({:08X}) '{:s}'"sv,
 					form,
 					edid,
 					iter->GetFormID(),
@@ -505,7 +505,7 @@ namespace ObScript
 				if (formType != RE::FormType::None &&
 				    formType != RE::FormType::Cell)
 				{
-					auto& forms = TESDataHandler->formArrays[stl::to_underlying(formType)];
+					auto& forms = TESDataHandler->formArrays[std::to_underlying(formType)];
 					for (auto iter : forms)
 					{
 						ShowHelp_Forms_Match(iter);
@@ -548,12 +548,12 @@ namespace ObScript
 
 			if (!detail::strempty(a_fileName))
 			{
-				auto match = fmt::format(FMT_STRING("{:s} CELL: {:s}"sv), a_fileName, a_edid);
+				auto match = std::format("{:s} CELL: {:s}"sv, a_fileName, a_edid);
 				RE::ConsoleLog::GetSingleton()->Print(match.data());
 			}
 			else
 			{
-				auto match = fmt::format(FMT_STRING("CELL: {:s}"sv), a_edid);
+				auto match = std::format("CELL: {:s}"sv, a_edid);
 				RE::ConsoleLog::GetSingleton()->Print(match.data());
 			}
 		}
@@ -562,7 +562,7 @@ namespace ObScript
 		{
 			if (!a_file->OpenTES(RE::NiFile::OpenMode::kReadOnly, false))
 			{
-				logger::warn(FMT_STRING("failed to open file: {:s}"sv), a_file->fileName);
+				SKSE::log::warn("failed to open file: {:s}"sv, a_file->fileName);
 				return;
 			}
 
@@ -613,7 +613,7 @@ namespace ObScript
 
 			if (!a_file->CloseTES(false))
 			{
-				logger::warn(FMT_STRING("failed to close file: {:s}"sv), a_file->fileName);
+				SKSE::log::warn("failed to close file: {:s}"sv, a_file->fileName);
 			}
 		}
 
