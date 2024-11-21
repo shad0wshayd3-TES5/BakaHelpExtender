@@ -1,4 +1,12 @@
+# dot folders
+.cache
+.vs/
+.vscode/
+.xmake/
+
+# folders
 build/
-build-ae/
-build-se/
-CMakeUserPresets.json
+vs*/
+
+# files
+*.zip
