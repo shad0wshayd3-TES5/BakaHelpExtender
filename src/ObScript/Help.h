@@ -12,9 +12,9 @@ namespace ObScript
 				if (detail::IsInModule(reinterpret_cast<std::uintptr_t>(function->executeFunction)))
 				{
 					static RE::SCRIPT_PARAMETER params[] = {
-						{ "matchstring (optional)", RE::SCRIPT_PARAM_TYPE::kChar, true },
-						{ "filter (optional)", RE::SCRIPT_PARAM_TYPE::kInt, true },
-						{ "form type (optional)", RE::SCRIPT_PARAM_TYPE::kChar, true }
+						{"matchstring (optional)", RE::SCRIPT_PARAM_TYPE::kChar, true},
+						{ "filter (optional)",     RE::SCRIPT_PARAM_TYPE::kInt,  true},
+						{ "form type (optional)",  RE::SCRIPT_PARAM_TYPE::kChar, true}
 					};
 
 					function->SetParameters(params);
@@ -46,44 +46,44 @@ namespace ObScript
 			{
 				switch (a_form->GetFormType())
 				{
-					case RE::FormType::Keyword:
-					case RE::FormType::LocationRefType:
-					case RE::FormType::Action:
-					case RE::FormType::MenuIcon:
-					case RE::FormType::Global:
-					case RE::FormType::HeadPart:
-					case RE::FormType::Race:
-					case RE::FormType::Sound:
-					case RE::FormType::Script:
-					case RE::FormType::Navigation:
-					case RE::FormType::Cell:
-					case RE::FormType::WorldSpace:
-					case RE::FormType::Land:
-					case RE::FormType::NavMesh:
-					case RE::FormType::Dialogue:
-					case RE::FormType::Quest:
-					case RE::FormType::Idle:
-					case RE::FormType::AnimatedObject:
-					case RE::FormType::ImageAdapter:
-					case RE::FormType::VoiceType:
-					case RE::FormType::Ragdoll:
-					case RE::FormType::DefaultObject:
-					case RE::FormType::MusicType:
-					case RE::FormType::StoryManagerBranchNode:
-					case RE::FormType::StoryManagerQuestNode:
-					case RE::FormType::StoryManagerEventNode:
-					case RE::FormType::SoundRecord:
-						break;
+				case RE::FormType::Keyword:
+				case RE::FormType::LocationRefType:
+				case RE::FormType::Action:
+				case RE::FormType::MenuIcon:
+				case RE::FormType::Global:
+				case RE::FormType::HeadPart:
+				case RE::FormType::Race:
+				case RE::FormType::Sound:
+				case RE::FormType::Script:
+				case RE::FormType::Navigation:
+				case RE::FormType::Cell:
+				case RE::FormType::WorldSpace:
+				case RE::FormType::Land:
+				case RE::FormType::NavMesh:
+				case RE::FormType::Dialogue:
+				case RE::FormType::Quest:
+				case RE::FormType::Idle:
+				case RE::FormType::AnimatedObject:
+				case RE::FormType::ImageAdapter:
+				case RE::FormType::VoiceType:
+				case RE::FormType::Ragdoll:
+				case RE::FormType::DefaultObject:
+				case RE::FormType::MusicType:
+				case RE::FormType::StoryManagerBranchNode:
+				case RE::FormType::StoryManagerQuestNode:
+				case RE::FormType::StoryManagerEventNode:
+				case RE::FormType::SoundRecord:
+					break;
 
-					default:
-						{
-							auto hndl = REX::W32::GetModuleHandleA("po3_Tweaks");
-							auto func = reinterpret_cast<const char* (*)(std::uint32_t)>(REX::W32::GetProcAddress(hndl, "GetFormEditorID"));
-							if (func)
-							{
-								return func(a_form->formID);
-							}
-						}
+				default:
+				{
+					auto hndl = REX::W32::GetModuleHandleA("po3_Tweaks");
+					auto func = reinterpret_cast<const char* (*)(std::uint32_t)>(REX::W32::GetProcAddress(hndl, "GetFormEditorID"));
+					if (func)
+					{
+						return func(a_form->formID);
+					}
+				}
 				}
 
 				return a_form->GetFormEditorID();
@@ -178,37 +178,37 @@ namespace ObScript
 
 			switch (idx)
 			{
-				case 0:
-					ShowHelp_Funcs();
-					ShowHelp_Settings();
-					ShowHelp_Globs();
-					ShowHelp_Forms();
-					ShowHelp_Usage();
-					break;
+			case 0:
+				ShowHelp_Funcs();
+				ShowHelp_Settings();
+				ShowHelp_Globs();
+				ShowHelp_Forms();
+				ShowHelp_Usage();
+				break;
 
-				case 1:
-					ShowHelp_Funcs();
-					ShowHelp_Usage();
-					break;
+			case 1:
+				ShowHelp_Funcs();
+				ShowHelp_Usage();
+				break;
 
-				case 2:
-					ShowHelp_Settings();
-					ShowHelp_Usage();
-					break;
+			case 2:
+				ShowHelp_Settings();
+				ShowHelp_Usage();
+				break;
 
-				case 3:
-					ShowHelp_Globs();
-					ShowHelp_Usage();
-					break;
+			case 3:
+				ShowHelp_Globs();
+				ShowHelp_Usage();
+				break;
 
-				case 4:
-					ShowHelp_Forms();
-					ShowHelp_Usage();
-					break;
+			case 4:
+				ShowHelp_Forms();
+				ShowHelp_Usage();
+				break;
 
-				default:
-					ShowHelp_Usage();
-					break;
+			default:
+				ShowHelp_Usage();
+				break;
 			}
 
 			return true;
@@ -297,59 +297,59 @@ namespace ObScript
 			std::string match;
 			switch (a_setting->GetType())
 			{
-				case RE::Setting::Type::kBool:
-					match = std::format(
-						"{:s} = {:s}",
-						a_setting->GetName(),
-						a_setting->GetBool());
-					break;
+			case RE::Setting::Type::kBool:
+				match = std::format(
+					"{:s} = {:s}",
+					a_setting->GetName(),
+					a_setting->GetBool());
+				break;
 
-				case RE::Setting::Type::kFloat:
-					match = std::format(
-						"{:s} = {:0.2f}"sv,
-						a_setting->GetName(),
-						a_setting->GetFloat());
-					break;
+			case RE::Setting::Type::kFloat:
+				match = std::format(
+					"{:s} = {:0.2f}"sv,
+					a_setting->GetName(),
+					a_setting->GetFloat());
+				break;
 
-				case RE::Setting::Type::kSignedInteger:
-					match = std::format(
-						"{:s} = {:d}"sv,
-						a_setting->GetName(),
-						a_setting->GetSInt());
-					break;
+			case RE::Setting::Type::kSignedInteger:
+				match = std::format(
+					"{:s} = {:d}"sv,
+					a_setting->GetName(),
+					a_setting->GetSInt());
+				break;
 
-				case RE::Setting::Type::kColor:
-					{
-						auto color = a_setting->GetColor();
-						match = std::format(
-							"{:s} = R:{:d} G:{:d} B:{:d} A:{:d}"sv,
-							a_setting->GetName(),
-							color.red,
-							color.green,
-							color.blue,
-							color.alpha);
-					}
-					break;
+			case RE::Setting::Type::kColor:
+			{
+				auto color = a_setting->GetColor();
+				match = std::format(
+					"{:s} = R:{:d} G:{:d} B:{:d} A:{:d}"sv,
+					a_setting->GetName(),
+					color.red,
+					color.green,
+					color.blue,
+					color.alpha);
+			}
+			break;
 
-				case RE::Setting::Type::kString:
-					match = std::format(
-						"{:s} = {:s}"sv,
-						a_setting->GetName(),
-						a_setting->GetString());
-					break;
+			case RE::Setting::Type::kString:
+				match = std::format(
+					"{:s} = {:s}"sv,
+					a_setting->GetName(),
+					a_setting->GetString());
+				break;
 
-				case RE::Setting::Type::kUnsignedInteger:
-					match = std::format(
-						"{:s} = {:d}"sv,
-						a_setting->GetName(),
-						a_setting->GetUInt());
-					break;
+			case RE::Setting::Type::kUnsignedInteger:
+				match = std::format(
+					"{:s} = {:d}"sv,
+					a_setting->GetName(),
+					a_setting->GetUInt());
+				break;
 
-				default:
-					match = std::format(
-						"{:s} = <UNKNOWN>"sv,
-						a_setting->GetName());
-					break;
+			default:
+				match = std::format(
+					"{:s} = <UNKNOWN>"sv,
+					a_setting->GetName());
+				break;
 			}
 
 			RE::ConsoleLog::GetSingleton()->Print(match.data());
@@ -464,30 +464,30 @@ namespace ObScript
 		{
 			switch (a_form->GetFormType())
 			{
-				case RE::FormType::Global:
+			case RE::FormType::Global:
+				break;
+
+			case RE::FormType::Cell:
+			{
+				auto cell = a_form->As<RE::TESObjectCELL>();
+				if (cell && cell->IsExteriorCell())
+				{
 					break;
+				}
+			}
 
-				case RE::FormType::Cell:
-					{
-						auto cell = a_form->As<RE::TESObjectCELL>();
-						if (cell && cell->IsExteriorCell())
-						{
-							break;
-						}
-					}
+			default:
+			{
+				auto edid = detail::GetFormEditorID(a_form);
+				auto name = a_form->GetName();
 
-				default:
-					{
-						auto edid = detail::GetFormEditorID(a_form);
-						auto name = a_form->GetName();
-
-						if ((edid && detail::strvicmp(edid, m_MatchString)) ||
-						    (name && detail::strvicmp(name, m_MatchString)))
-						{
-							m_Forms.emplace_back(a_form);
-						}
-					}
-					break;
+				if ((edid && detail::strvicmp(edid, m_MatchString)) ||
+				    (name && detail::strvicmp(name, m_MatchString)))
+				{
+					m_Forms.emplace_back(a_form);
+				}
+			}
+			break;
 			}
 		}
 
@@ -584,26 +584,26 @@ namespace ObScript
 					{
 						switch (a_file->GetCurrentSubRecordType())
 						{
-							case 'DIDE':
-								gotEDID = a_file->ReadData(edid, a_file->actualChunkSize);
-								if (gotEDID && gotDATA && ((data & 1) == 0))
-								{
-									m_CellMap.insert_or_assign(std::make_pair(cidx, edid), a_file->fileName);
-									continue;
-								}
-								break;
+						case 'DIDE':
+							gotEDID = a_file->ReadData(edid, a_file->actualChunkSize);
+							if (gotEDID && gotDATA && ((data & 1) == 0))
+							{
+								m_CellMap.insert_or_assign(std::make_pair(cidx, edid), a_file->fileName);
+								continue;
+							}
+							break;
 
-							case 'ATAD':
-								gotDATA = a_file->ReadData(&data, a_file->actualChunkSize);
-								if (gotEDID && gotDATA && ((data & 1) == 0))
-								{
-									m_CellMap.insert_or_assign(std::make_pair(cidx, edid), a_file->fileName);
-									continue;
-								}
-								break;
+						case 'ATAD':
+							gotDATA = a_file->ReadData(&data, a_file->actualChunkSize);
+							if (gotEDID && gotDATA && ((data & 1) == 0))
+							{
+								m_CellMap.insert_or_assign(std::make_pair(cidx, edid), a_file->fileName);
+								continue;
+							}
+							break;
 
-							default:
-								break;
+						default:
+							break;
 						}
 					}
 					while (a_file->SeekNextSubrecord());

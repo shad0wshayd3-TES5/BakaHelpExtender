@@ -6,14 +6,14 @@ namespace
 	{
 		switch (a_msg->type)
 		{
-			case SKSE::MessagingInterface::kPostLoad:
-				ObScript::Help::Install();
-				break;
-			case SKSE::MessagingInterface::kDataLoaded:
-				ObScript::Help::ClearCellMap();
-				break;
-			default:
-				break;
+		case SKSE::MessagingInterface::kPostLoad:
+			ObScript::Help::Install();
+			break;
+		case SKSE::MessagingInterface::kDataLoaded:
+			ObScript::Help::ClearCellMap();
+			break;
+		default:
+			break;
 		}
 	}
 }

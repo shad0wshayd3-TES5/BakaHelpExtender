@@ -5,7 +5,6 @@
 
 using namespace std::literals;
 
-
 #ifdef SKYRIM_SUPPORT_AE
 #	define OFFSET(se, ae) ae
 #else
