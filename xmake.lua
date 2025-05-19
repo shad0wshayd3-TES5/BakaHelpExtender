@@ -1,8 +1,8 @@
--- set xmake version
-set_xmakever("2.9.4")
+-- set minimum xmake version
+set_xmakever("2.8.2")
 
--- include local folders
-includes("extern/commonlibsse")
+-- includes
+includes("lib/commonlibsse")
 
 -- set project
 set_project("HelpExtender")
@@ -10,25 +10,23 @@ set_version("2.0.0")
 set_license("GPL-3.0")
 
 -- set defaults
-set_arch("x64")
 set_languages("c++23")
-set_optimize("faster")
-set_warnings("allextra", "error")
-set_defaultmode("releasedbg")
-
--- enable lto
-set_policy("build.optimization.lto", true)
+set_warnings("allextra")
 
 -- add rules
 add_rules("mode.debug", "mode.releasedbg")
 add_rules("plugin.vsxmake.autoupdate")
 
--- add config
+-- set policies
+set_policy("build.optimization.lto", true)
+set_policy("package.requires_lock", true)
+
+-- set configs
 set_config("skyrim_ae", true)
 
--- setup targets
+-- targets
 target("HelpExtender")
-    -- bind local dependencies
+    -- add dependencies to target
     add_deps("commonlibsse")
 
     -- add commonlibsse plugin
@@ -37,11 +35,11 @@ target("HelpExtender")
         author = "shad0wshayd3"
     })
 
-    -- add source files
+    -- add src files
     add_files("src/**.cpp")
     add_headerfiles("src/**.h")
     add_includedirs("src")
-    set_pcxxheader("src/PCH.h")
+    set_pcxxheader("src/pch.h")
 
     -- add extra files
     add_extrafiles(".clang-format")
