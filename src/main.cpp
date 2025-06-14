@@ -10,7 +10,7 @@ namespace
 			ObScript::Help::Install();
 			break;
 		case SKSE::MessagingInterface::kDataLoaded:
-			ObScript::Help::ClearCellMap();
+			ObScript::Help::FORM::CELL::Build();
 			break;
 		default:
 			break;
@@ -22,6 +22,5 @@ SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
 {
 	SKSE::Init(a_skse);
 	SKSE::GetMessagingInterface()->RegisterListener(MessageCallback);
-
 	return true;
 }
