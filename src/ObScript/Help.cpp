@@ -94,12 +94,11 @@ namespace ObScript::Help
 			return a_form->GetFormEditorID();
 		}
 
-		void Print(std::string_view a_msg)
+		void Print(std::string a_msg)
 		{
-			if (auto consoleLog = RE::ConsoleLog::GetSingleton())
-			{
-				consoleLog->Print(a_msg.data());
-			}
+			REX::STR::REPLACE_ALL(a_msg, "%"sv, "%%"sv);
+			if (auto log = RE::ConsoleLog::GetSingleton())
+				log->Print(a_msg.data());
 		}
 	}
 
@@ -277,7 +276,7 @@ namespace ObScript::Help
 
 			void Print(const std::string_view& a_name)
 			{
-				IMPL::Print("----EXTERIOR CELLS----------------------"sv);
+				IMPL::Print("----EXTERIOR CELLS----------------------");
 
 				std::sort(ExteriorCells.begin(), ExteriorCells.end());
 				for (auto& iter : ExteriorCells)
@@ -317,7 +316,7 @@ namespace ObScript::Help
 		{
 			FormsToPrint.clear();
 
-			IMPL::Print("----OTHER FORMS-------------------------"sv);
+			IMPL::Print("----OTHER FORMS-------------------------");
 			switch (a_type)
 			{
 			case RE::FormType::None:
@@ -366,13 +365,13 @@ namespace ObScript::Help
 
 		void Print(const std::string_view& a_name)
 		{
-			IMPL::Print("----CONSOLE COMMANDS--------------------"sv);
+			IMPL::Print("----CONSOLE COMMANDS--------------------");
 			for (auto& command : RE::GetConsoleFunctions())
 			{
 				Match(a_name, command);
 			}
 
-			IMPL::Print("----SCRIPT FUNCTIONS--------------------"sv);
+			IMPL::Print("----SCRIPT FUNCTIONS--------------------");
 			for (auto& command : RE::GetScriptFunctions())
 			{
 				Match(a_name, command);
@@ -394,7 +393,7 @@ namespace ObScript::Help
 
 		void Print(const std::string_view& a_name)
 		{
-			IMPL::Print("----GLOBAL VARIABLES--------------------"sv);
+			IMPL::Print("----GLOBAL VARIABLES--------------------");
 			if (auto dataHandler = RE::TESDataHandler::GetSingleton())
 			{
 				for (auto iter : dataHandler->GetFormArray<RE::TESGlobal>())
@@ -452,7 +451,7 @@ namespace ObScript::Help
 
 		void Print(const std::string_view& a_name)
 		{
-			IMPL::Print("----GAME SETTINGS-----------------------"sv);
+			IMPL::Print("----GAME SETTINGS-----------------------");
 			if (auto gmstSettings = RE::GameSettingCollection::GetSingleton())
 			{
 				for (auto& [iter, name, setting] : gmstSettings->settings)
@@ -461,7 +460,7 @@ namespace ObScript::Help
 				}
 			}
 
-			IMPL::Print("----INI SETTINGS------------------------"sv);
+			IMPL::Print("----INI SETTINGS------------------------");
 			if (auto mainSettings = RE::INISettingCollection::GetSingleton())
 			{
 				if (auto prefSettings = RE::INIPrefSettingCollection::GetSingleton())
@@ -480,9 +479,9 @@ namespace ObScript::Help
 	{
 		void Print()
 		{
-			IMPL::Print("usage: help <matchstring> <filter> <form type>"sv);
-			IMPL::Print("filters: 0-all 1-functions, 2-settings, 3-globals, 4-other forms"sv);
-			IMPL::Print("form type is 4 characters and is ignored unless the filter is 4."sv);
+			IMPL::Print("usage: help <matchstring> <filter> <form type>");
+			IMPL::Print("filters: 0-all 1-functions, 2-settings, 3-globals, 4-other forms");
+			IMPL::Print("form type is 4 characters and is ignored unless the filter is 4.");
 		}
 	}
 }
