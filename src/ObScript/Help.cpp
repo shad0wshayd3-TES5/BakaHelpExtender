@@ -10,13 +10,13 @@ namespace RE
 
 	auto GetConsoleFunctions()
 	{
-		static REL::Relocation<SCRIPT_FUNCTION(*)[436]> functions{ Offset::SCRIPT_FUNCTION::FirstConsoleCommand };
+		static REL::Relocation<SCRIPT_FUNCTION(*)[436]> functions{ REL::ID(365650) };
 		return std::span{ *functions };
 	}
 
 	auto GetScriptFunctions()
 	{
-		static REL::Relocation<SCRIPT_FUNCTION(*)[736]> functions{ Offset::SCRIPT_FUNCTION::FirstScriptCommand };
+		static REL::Relocation<SCRIPT_FUNCTION(*)[736]> functions{ REL::ID(361120) };
 		return std::span{ *functions };
 	}
 }
